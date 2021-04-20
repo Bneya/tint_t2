@@ -4,6 +4,8 @@ const cors = require('cors');
 // const axios = require('axios');
 // import './styles.css';
 
+// models = require('models');
+
 // Create app and add middlewares
 var app = express();
 
