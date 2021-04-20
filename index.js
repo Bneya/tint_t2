@@ -4,7 +4,8 @@ const cors = require('cors');
 // const axios = require('axios');
 // import './styles.css';
 
-// models = require('models');
+// Import ORM models
+models = require('./src/models');
 
 // Create app and add middlewares
 var app = express();
@@ -28,6 +29,7 @@ app.use(cors())
 app.use((req, res, next) => {
   // console.log("req", req);
   // req.axiosInstance = axiosInstance;
+  req.models = models;
 
   return next();
 });
@@ -45,8 +47,10 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 require('dotenv').config();
 
 // Home route
-app.get('/', function (req, res) {
+app.get('/', async function (req, res) {
   res.send('Hello World!');
+  const artists = await req.models.artist.findAll({});
+  console.log('artists', artists);
   // res.redirect('/seasons');
 });
 
