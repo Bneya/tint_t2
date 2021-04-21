@@ -3,9 +3,6 @@ function loggingDB(msg) {
   console.log(msg)
 }
 
-console.log('USERNAME', process.env.DB_USERNAME);
-console.log('PASSWORD', process.env.DB_PASSWORD);
-
 module.exports = {
   development: {
     username: process.env.DB_USERNAME || 'postgres',

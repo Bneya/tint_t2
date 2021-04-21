@@ -48,9 +48,9 @@ require('dotenv').config();
 
 // Home route
 app.get('/', async function (req, res) {
-  res.send('Hello World!');
   const artists = await req.models.artist.findAll({});
   console.log('artists', artists);
+  res.send(`Hello World!, ${artists[0].albums}`);
   // res.redirect('/seasons');
 });
 
