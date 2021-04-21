@@ -1,6 +1,6 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('albums', {
+    await queryInterface.createTable('talbums', {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -9,7 +9,7 @@ module.exports = {
       artist_id: {
         type: Sequelize.STRING,
         references: {
-          model: 'artists',
+          model: 'tartists',
           key: 'id',
         },
       },
@@ -28,17 +28,17 @@ module.exports = {
       self: {
         type: Sequelize.STRING
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('albums');
+    await queryInterface.dropTable('talbums');
   }
 };
