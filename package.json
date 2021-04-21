@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "start": "sequelize db:migrate && node index.js",
+  }
   "name": "tint_t2",
   "version": "0.1.0",
   "main": "index.js",
