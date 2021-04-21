@@ -1,21 +1,31 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('artists', {
+    await queryInterface.createTable('tracks', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.STRING
       },
+      album_id: {
+        type: Sequelize.STRING,
+        references: {
+          model: 'albums',
+          key: 'id',
+        },
+      },
       name: {
         type: Sequelize.STRING
       },
-      age: {
+      duration: {
+        type: Sequelize.FLOAT
+      },
+      times_played: {
         type: Sequelize.INTEGER
       },
-      albums: {
+      artist: {
         type: Sequelize.STRING
       },
-      tracks: {
+      album: {
         type: Sequelize.STRING
       },
       self: {
@@ -32,6 +42,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('artists');
+    await queryInterface.dropTable('tracks');
   }
 };
