@@ -1,5 +1,6 @@
 var express = require('express');
 const cors = require('cors');
+const indexRouter = require('./src/routers');
 // const indexRouter = require('./routes/index');
 // const axios = require('axios');
 // import './styles.css';
@@ -45,6 +46,9 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 // Load env variables
 require('dotenv').config();
+
+// Carga las rutas con el router
+app.use(`/`, indexRouter)
 
 // Home route
 app.get('/', async function (req, res) {
