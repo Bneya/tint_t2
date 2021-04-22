@@ -15,6 +15,7 @@ router.get(
       attributes: ['id', 'name', 'age', 'albums', 'tracks', 'self'],
     });
     // res.body = artists;
+    res.setHeader('Content-Type', 'application/json');
     res.send(artists);
   }
 )
@@ -35,6 +36,7 @@ router.get(
     });
     // console.log('artist', artist);
     if (artist) {
+      res.setHeader('Content-Type', 'application/json');
       res.send(artist);
     } else {
       res.status(404);
