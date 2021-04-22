@@ -4,9 +4,16 @@ const { artistSchemas } = require('../schemas')
 
 const router = express.Router()
 
-// Todas las rutas de esta categoría
-router.get(`/`, function (req, res) {
-  res.send('Hello artists!');
+// Todas las rutas de esta categoría ----------------------
+
+// GET /artists. Get all artists
+router.get(`/`, async function (req, res) {
+  // res.send('Hello artists!');
+  const artists = await req.models.tartist.findAll({
+    attributes: ['id', 'name', 'age', 'albums', 'tracks', 'self'],
+  });
+  // res.body = artists;
+  res.send(artists);
 })
 
 router.post(
