@@ -20,24 +20,38 @@ router.get(
 )
 
 // GET /artists/:id. Get all artist by id
-router.get(`/:id`, async function (req, res) {
+router.get(
+  `/:id`,
+  async function (req, res) {
 
-  // console.log('req', req);
-  const id = req.params.id;
-  console.log('preguntando por el id:', id);
-  const artists = await req.models.tartist.findAll({
-    attributes: ['id', 'name', 'age', 'albums', 'tracks', 'self'],
-    where: {
-      id
+    // console.log('req', req);
+    const id = req.params.id;
+    console.log('preguntando por el id:', id);
+    const artist = await req.models.tartist.findOne({
+      attributes: ['id', 'name', 'age', 'albums', 'tracks', 'self'],
+      where: {
+        id
+      }
+    });
+    // console.log('artist', artist);
+    if (artist) {
+      res.send(artist);
+    } else {
+      res.status(404);
+      res.send('Artista no encontrado')
     }
-  });
-  if (artists.length > 0) {
-    res.send(artists);
-  } else {
-    res.status(404);
-    res.send('Artista no encontrado')
   }
-})
+)
+
+// GET /artists/:id/albums
+router.get(
+  '/:id/albums',
+  async function (req, res) {
+    // const albums = await.req.models.tartist.findAll
+  }
+)
+
+
 
 router.post(
   '/',
