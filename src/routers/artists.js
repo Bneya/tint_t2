@@ -49,7 +49,24 @@ router.get(
 router.get(
   '/:id/albums',
   async function (req, res) {
-    // const albums = await.req.models.tartist.findAll
+
+    const id = req.params.id;
+    const artist = await req.models.tartist.findOne({
+      attributes: [],
+      where: { id },
+      include: {
+        model: req.models.talbum,
+        attributes: ['id', ['tartist_id', 'artist_id'], 'name', 'genre', 'artist', 'tracks', 'self'],
+      }
+    })
+    if (artist) {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(albums.talbums)
+    } else {
+      res.status(404);
+      res.send('Artista no encontrado')
+    }
+    // console.log('albums', albums.talbums);
   }
 )
 
