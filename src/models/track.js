@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       primaryKey: true,
     },
-    album_id: DataTypes.STRING,
+    talbum_id: DataTypes.STRING,
     name: DataTypes.STRING,
     duration: DataTypes.FLOAT,
     times_played: DataTypes.INTEGER,

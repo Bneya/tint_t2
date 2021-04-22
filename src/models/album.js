@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       primaryKey: true,
     },
-    artist: DataTypes.STRING,
+    tartist_id: DataTypes.STRING,
     name: DataTypes.STRING,
     genre: DataTypes.STRING,
     artist: DataTypes.STRING,

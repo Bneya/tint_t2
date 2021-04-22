@@ -6,7 +6,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.STRING
       },
-      album_id: {
+      talbum_id: {
         type: Sequelize.STRING,
         references: {
           model: 'talbums',

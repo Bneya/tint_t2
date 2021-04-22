@@ -48,9 +48,9 @@ require('dotenv').config();
 
 // Home route
 app.get('/', async function (req, res) {
-  const artists = await req.models.tartist.findAll({});
+  const artists = await req.models.tartist.findAll({ include: req.models.talbum });
   console.log('artists', artists);
-  res.send(`Hello World!, ${artists[0].albums}`);
+  res.send(`Hello World!, ${artists[0]}`);
   // res.redirect('/seasons');
 });
 

@@ -6,7 +6,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.STRING
       },
-      artist_id: {
+      tartist_id: {
         type: Sequelize.STRING,
         references: {
           model: 'tartists',
