@@ -61,7 +61,43 @@ router.get(
     })
     if (artist) {
       res.setHeader('Content-Type', 'application/json');
-      res.send(albums.talbums)
+      res.send(artist.talbums)
+    } else {
+      res.status(404);
+      res.send('Artista no encontrado')
+    }
+    // console.log('albums', albums.talbums);
+  }
+)
+
+// GET /artists/:id/tacks
+router.get(
+  '/:id/tracks',
+  async function (req, res) {
+
+    const id = req.params.id;
+    const artist = await req.models.tartist.findOne({
+      attributes: [],
+      where: { id },
+      include: {
+        model: req.models.talbum,
+        attributes: ['id', ['tartist_id', 'artist_id'], 'name', 'genre', 'artist', 'tracks', 'self'],
+        include: {
+          model: req.models.ttrack,
+          attributes: ['id', ['talbum_id', 'album_id'], 'name', 'duration', 'times_played', 'artist', 'album', 'self'],
+        }
+      }
+    })
+    if (artist) {
+      // Si encontró al artista, junta todos sus tracks y entrégalos
+      const ttracks = [];
+      artist.talbums.forEach((talbum) => {
+        ttracks.push.apply(ttracks, talbum.ttracks);
+      });
+
+      res.setHeader('Content-Type', 'application/json');
+
+      res.send(ttracks)
     } else {
       res.status(404);
       res.send('Artista no encontrado')
