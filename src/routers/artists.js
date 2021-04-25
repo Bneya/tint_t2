@@ -1,8 +1,27 @@
 var express = require('express');
 const schemaValidator = require('../schemas/schemaValidator');
 const { artistSchemas } = require('../schemas')
+const btoa = require('btoa');
 
 const router = express.Router()
+
+// Funciones de utilidad
+function createArtistObject(fullUrl, rawArtistObject) {
+  const artistId = btoa(rawArtistObject.name).slice(0, 22);
+
+  const artistObj = {
+    id: artistId,
+    name: rawArtistObject.name,
+    age: rawArtistObject.age,
+    albums: `${fullUrl}/${artistId}/albums`,
+    tracks: `${fullUrl}/${artistId}/tracks`,
+    self: `${fullUrl}/${artistId}`,
+  }
+
+  return artistObj;
+
+}
+
 
 // Todas las rutas de esta categoría ----------------------
 
@@ -106,15 +125,45 @@ router.get(
   }
 )
 
-
-
+// POST /artists
 router.post(
   '/',
   schemaValidator(artistSchemas.createArtist),
-  function (req, res) {
-    res.send('pasamos el validator')
+  async function (req, res) {
+    // console.log('res body', req.body);
+
+    const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    const artistObj = createArtistObject(fullUrl, req.body);
+    // console.log('artistObj', artistObj);
+
+    try {
+      await req.models.tartist.create(artistObj);
+
+      // Creado con éxito
+      res.status(201);
+    } catch (validationError) {
+
+      // Ya eiste el artista
+      res.status(409);
+    } finally {
+
+      // Devuelve el artista nuevo creado o el ya existente
+      res.setHeader('Content-Type', 'application/json');
+      res.send(artistObj);
+    }
+
   }
 )
+
+
+
+// router.post(
+//   '/',
+//   schemaValidator(artistSchemas.createArtist),
+//   function (req, res) {
+//     res.send('pasamos el validator')
+//   }
+// )
 
 
 
