@@ -41,8 +41,30 @@ router.get(
   }
 )
 
+// GET /albums/id/tracks
+router.get(
+  '/:id/tracks',
+  async function (req, res) {
 
-
+    const id = req.params.id;
+    const album = await req.models.talbum.findOne({
+      attributes: [],
+      where: { id },
+      include: {
+        model: req.models.ttrack,
+        attributes: ['id', ['talbum_id', 'album_id'], 'name', 'duration', 'times_played', 'artist', 'album', 'self'],
+      }
+    })
+    if (album) {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(album.ttracks)
+    } else {
+      res.status(404);
+      res.send('Album no encontrado')
+    }
+    // console.log('albums', albums.talbums);
+  }
+)
 
 
 
