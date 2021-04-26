@@ -50,6 +50,13 @@ require('dotenv').config();
 // Carga las rutas con el router
 app.use(`/`, indexRouter)
 
+// Si se llega a esta ruta es que no se encontró lo que se buscaba
+app.use((req, res, next) => {
+  console.log('llegamos hasta después del index router');
+  res.status(405);
+  res.send('Método no aceptado')
+})
+
 // Home route
 app.get('/', async function (req, res) {
   const artists = await req.models.tartist.findAll({ include: req.models.talbum });
