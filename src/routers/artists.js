@@ -22,6 +22,24 @@ function createArtistObject(fullUrl, rawArtistObject) {
 
 }
 
+function createAlbumObject(baseUrl, artistId, rawAlbumObject) {
+  const albumId = btoa(`${rawAlbumObject.name}:${artistId}`).slice(0, 22);
+
+  const albumObj = {
+    id: albumId,
+    tartist_id: artistId,
+    name: rawAlbumObject.name,
+    genre: rawAlbumObject.genre,
+    artist: `${baseUrl}/artists/${artistId}`,
+    tracks: `${baseUrl}/albums/${albumId}/tracks`,
+    self: `${baseUrl}/albums/${albumId}`,
+  }
+
+  console.log('albumObj', albumObj);
+  return albumObj;
+
+}
+
 
 // Todas las rutas de esta categoría ----------------------
 
@@ -125,7 +143,7 @@ router.get(
   }
 )
 
-// POST /artists
+// POST /artists. Crear un artista
 router.post(
   '/',
   schemaValidator(artistSchemas.createArtist),
@@ -142,7 +160,7 @@ router.post(
       // Creado con éxito
       res.status(201);
     } catch (validationError) {
-
+      console.log(validationError);
       // Ya eiste el artista
       res.status(409);
     } finally {
@@ -155,6 +173,56 @@ router.post(
   }
 )
 
+// POST /artists/id/albums. Crea un album de un artista
+router.post(
+  '/:id/albums',
+  schemaValidator(artistSchemas.createAlbum),
+  async function (req, res) {
+
+    const baseUrl = req.protocol + '://' + req.get('host');
+    const tartist_id = req.params.id;
+    const albumObj = createAlbumObject(baseUrl, tartist_id, req.body);
+
+    const foundArtist = await req.models.tartist.findOne({ where: { id: tartist_id } });
+    console.log('foundArtist', foundArtist);
+
+    // Si encuentras al artista
+    if (foundArtist){
+      // Intenta crearlo ahora
+      try {
+
+        await req.models.talbum.create(albumObj);
+
+        // Creado con éxito
+        res.status(201);
+      } catch (validationError) {
+        console.log(validationError);
+        // Ya existe el album
+        res.status(409);
+      } finally {
+
+        // Devuelve el album nuevo creado o el ya existente
+        res.setHeader('Content-Type', 'application/json');
+        const { id, tartist_id, name, genre, artist, tracks, self } = albumObj;
+        const pristineObj = {
+          id,
+          artist_id: tartist_id,
+          name,
+          genre,
+          artist,
+          tracks,
+          self
+        }
+        res.send(pristineObj);
+      }
+    } else {      // Si no lo encuentras, devuelve el 422
+      res.status(422);
+      res.send('Artista no existe')
+    }
+
+
+  }
+)
 
 
 // router.post(

@@ -1,5 +1,7 @@
 const Joi = require('joi');
 
+
+// Artist schemas ------------------------------------
 const createArtist = Joi.object().keys({
   body: Joi.object().keys({
     name: Joi.string()
@@ -10,11 +12,27 @@ const createArtist = Joi.object().keys({
   })
 })
 
+const createAlbum = Joi.object().keys({
+  body: Joi.object().keys({
+    name: Joi.string()
+      .required(),
+    genre: Joi.string()
+      .required()
+  })
+})
 
+
+
+// Route METHODS schema
+const routeMethods = {
+  '/artists': ['GET', 'POST'],
+  '/artists/id': ['GET'],
+}
 
 
 const artistSchemas = {
-  createArtist
+  createArtist,
+  createAlbum
 }
 
 
