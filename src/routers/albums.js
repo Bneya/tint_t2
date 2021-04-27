@@ -66,6 +66,26 @@ router.get(
   }
 )
 
+// DELETE /albums/:id. Borra un album a partir de un id
+router.delete(
+  '/:id',
+  async function (req, res) {
+     const id = req.params.id;
+     const album = await req.models.talbum.findOne({ where: { id } });
+
+     if (album) {
+       // Si encuentra el artista, elimínalo
+       await album.destroy();
+       res.status(204);
+       res.send('Album eliminado');
+     } else {
+       // Artista no encontrado
+       res.status(404)
+       res.send('Album no encontrado');
+     }
+  }
+)
+
 
 
 module.exports = router;
