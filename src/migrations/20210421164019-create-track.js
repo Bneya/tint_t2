@@ -12,6 +12,7 @@ module.exports = {
           model: 'talbums',
           key: 'id',
         },
+        onDelete: 'CASCADE',
       },
       name: {
         type: Sequelize.STRING

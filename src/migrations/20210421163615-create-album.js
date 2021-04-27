@@ -12,6 +12,7 @@ module.exports = {
           model: 'tartists',
           key: 'id',
         },
+        onDelete: 'CASCADE',
       },
       name: {
         type: Sequelize.STRING

@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      ttrack.belongsTo(models.talbum)
+      ttrack.belongsTo(models.talbum, { onDelete: 'cascade' });
     }
   };
   ttrack.init({

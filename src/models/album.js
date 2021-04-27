@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      talbum.belongsTo(models.tartist);
+      talbum.belongsTo(models.tartist, { onDelete: 'cascade' });
       talbum.hasMany(models.ttrack)
     }
   };

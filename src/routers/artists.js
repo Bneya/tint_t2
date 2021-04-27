@@ -57,7 +57,7 @@ router.get(
   }
 )
 
-// GET /artists/:id. Get all artist by id
+// GET /artists/:id. Get artist by id
 router.get(
   `/:id`,
   async function (req, res) {
@@ -220,10 +220,28 @@ router.post(
       res.send('Artista no existe')
     }
 
-
   }
 )
 
+// DELETE /artists/:id. Borra un artista a partir de un id
+router.delete(
+  '/:id',
+  async function (req, res) {
+     const id = req.params.id;
+     const artist = await req.models.tartist.findOne({ where: { id } });
+
+     if (artist) {
+       // Si encuentra el artista, elimínalo
+       await artist.destroy();
+       res.status(204);
+       res.send('Artista eliminado');
+     } else {
+       // Artista no encontrado
+       res.status(404)
+       res.send('Artista inexistente');
+     }
+  }
+)
 
 // router.post(
 //   '/',
