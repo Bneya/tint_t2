@@ -62,6 +62,31 @@ router.delete(
   }
 )
 
+// PUT /tracks/:id/play
+router.put(
+  '/:id/play',
+  async function (req, res) {
+
+    const id = req.params.id;
+    const track = await req.models.ttrack.findOne({ where: { id } });
+
+    if (track) {
+
+      // Añade +1 a la cantidad de reproducciones y lo guarda en db con .save()
+      const newTimesPlayedCount = track.times_played + 1;
+      track.times_played = newTimesPlayedCount;
+      await track.save();
+
+      res.status(200);
+      res.send('Canción reproducida');
+    } else {
+      // Track no encontrada
+      res.status(404);
+      res.send('Canción no encontrada');
+    }
+  }
+)
+
 
 
 
