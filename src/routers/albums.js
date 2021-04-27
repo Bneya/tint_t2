@@ -1,6 +1,29 @@
 var express = require('express');
+const schemaValidator = require('../schemas/schemaValidator');
+const { albumSchemas } = require('../schemas');
+const btoa = require('btoa');
 
 const router = express.Router()
+
+// Funciones de utilidad --------------------------------------
+function createTrackObject(baseUrl, artistUrl, albumId, rawTrackObject) {
+  const trackId = btoa(`${rawTrackObject.name}:${albumId}`).slice(0, 22);
+
+  const trackObj = {
+    id: trackId,
+    talbum_id: albumId,
+    name: rawTrackObject.name,
+    duration: rawTrackObject.duration,
+    times_played: 0,
+    artist: artistUrl,
+    album: `${baseUrl}/albums/${albumId}`,
+    self: `${baseUrl}/tracks/${trackId}`,
+  }
+
+  console.log('trackObj', trackObj);
+  return trackObj;
+}
+
 
 // Todas las rutas de esta categoría ---------------------------
 
@@ -65,6 +88,58 @@ router.get(
     // console.log('albums', albums.talbums);
   }
 )
+
+// POST /albums/:id/tracks. Crea un track para el album del id especificado
+router.post(
+  '/:id/tracks',
+  schemaValidator(albumSchemas.createTrack),
+  async function (req, res) {
+    // res.send('pasamos el validador');
+    const baseUrl = req.protocol + '://' + req.get('host');
+    const id = req.params.id;
+
+    const foundAlbum = await req.models.talbum.findOne({ where: { id } });
+
+    // Si encuentras el album
+    if (foundAlbum) {
+      // res.send('Album encontrado');
+      const artistUrl = foundAlbum.artist;
+      const trackObj = createTrackObject(baseUrl, artistUrl, id, req.body);
+
+      try {
+        await req.models.ttrack.create(trackObj);
+
+        // Creado con éxito
+        res.status(201);
+      } catch (validationError) {
+        console.log(validationError);
+        // Ya existe el track
+        res.status(409);
+
+      } finally {
+        // Devuelve el track nuevo creado o el ya existente
+        res.setHeader('Content-Type', 'application/json');
+        const { id, talbum_id, name, duration, times_played, artist, album, self } = trackObj;
+        const pristineObj = {
+          id,
+          album_id: talbum_id,
+          name,
+          duration,
+          times_played,
+          artist,
+          album,
+          self
+        }
+        res.send(pristineObj);
+      }
+
+    } else {
+      res.status(422);
+      res.send('Album no existe')
+    }
+  }
+)
+
 
 // DELETE /albums/:id. Borra un album a partir de un id
 router.delete(

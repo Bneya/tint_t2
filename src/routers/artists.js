@@ -1,11 +1,11 @@
 var express = require('express');
 const schemaValidator = require('../schemas/schemaValidator');
-const { artistSchemas } = require('../schemas')
+const { artistSchemas } = require('../schemas');
 const btoa = require('btoa');
 
 const router = express.Router()
 
-// Funciones de utilidad
+// Funciones de utilidad --------------------------------------
 function createArtistObject(fullUrl, rawArtistObject) {
   const artistId = btoa(rawArtistObject.name).slice(0, 22);
 

@@ -21,13 +21,15 @@ const createAlbum = Joi.object().keys({
   })
 })
 
+const createTrack = Joi.object().keys({
+  body: Joi.object().keys({
+    name: Joi.string()
+      .required(),
+    duration: Joi.number()
+      .required(),
+  })
+})
 
-
-// Route METHODS schema
-const routeMethods = {
-  '/artists': ['GET', 'POST'],
-  '/artists/id': ['GET'],
-}
 
 
 const artistSchemas = {
@@ -35,5 +37,9 @@ const artistSchemas = {
   createAlbum
 }
 
+const albumSchemas = {
+  createTrack,
+}
 
-module.exports = { artistSchemas }
+
+module.exports = { artistSchemas, albumSchemas }
