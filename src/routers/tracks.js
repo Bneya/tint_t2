@@ -24,7 +24,6 @@ router.get(
   async function (req, res) {
 
     const id = req.params.id;
-    console.log('preguntando por el id:', id);
     const track = await req.models.ttrack.findOne({
       attributes: ['id', ['talbum_id', 'album_id'], 'name', 'duration', 'times_played', 'artist', 'album', 'self'],
       where: {

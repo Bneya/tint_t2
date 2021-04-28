@@ -35,7 +35,6 @@ function createAlbumObject(baseUrl, artistId, rawAlbumObject) {
     self: `${baseUrl}/albums/${albumId}`,
   }
 
-  console.log('albumObj', albumObj);
   return albumObj;
 
 }
@@ -51,7 +50,7 @@ router.get(
     const artists = await req.models.tartist.findAll({
       attributes: ['id', 'name', 'age', 'albums', 'tracks', 'self'],
     });
-    // res.body = artists;
+
     res.setHeader('Content-Type', 'application/json');
     res.send(artists);
   }
@@ -62,16 +61,14 @@ router.get(
   `/:id`,
   async function (req, res) {
 
-    // console.log('req', req);
     const id = req.params.id;
-    console.log('preguntando por el id:', id);
     const artist = await req.models.tartist.findOne({
       attributes: ['id', 'name', 'age', 'albums', 'tracks', 'self'],
       where: {
         id
       }
     });
-    // console.log('artist', artist);
+
     if (artist) {
       res.setHeader('Content-Type', 'application/json');
       res.send(artist);
@@ -103,7 +100,7 @@ router.get(
       res.status(404);
       res.send('Artista no encontrado')
     }
-    // console.log('albums', albums.talbums);
+
   }
 )
 
@@ -139,7 +136,6 @@ router.get(
       res.status(404);
       res.send('Artista no encontrado')
     }
-    // console.log('albums', albums.talbums);
   }
 )
 
@@ -148,11 +144,9 @@ router.post(
   '/',
   schemaValidator(artistSchemas.createArtist),
   async function (req, res) {
-    // console.log('res body', req.body);
 
     const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
     const artistObj = createArtistObject(fullUrl, req.body);
-    // console.log('artistObj', artistObj);
 
     try {
       await req.models.tartist.create(artistObj);
@@ -184,7 +178,6 @@ router.post(
     const albumObj = createAlbumObject(baseUrl, tartist_id, req.body);
 
     const foundArtist = await req.models.tartist.findOne({ where: { id: tartist_id } });
-    console.log('foundArtist', foundArtist);
 
     // Si encuentras al artista
     if (foundArtist){
@@ -260,8 +253,6 @@ router.put(
         raw: true,
       })
       const albumIds = artistAlbums.map(alb => alb.id);
-      console.log('artistAlbums', artistAlbums);
-      console.log('albumIds', albumIds);
 
       // Incrementa en +1 todos los tracks que tengan talbum_id alguno de los anteriores
       await req.models.ttrack.update(
@@ -279,18 +270,6 @@ router.put(
     }
   }
 )
-
-// router.post(
-//   '/',
-//   schemaValidator(artistSchemas.createArtist),
-//   function (req, res) {
-//     res.send('pasamos el validator')
-//   }
-// )
-
-
-
-
 
 
 module.exports = router;

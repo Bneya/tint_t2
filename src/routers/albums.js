@@ -20,7 +20,6 @@ function createTrackObject(baseUrl, artistUrl, albumId, rawTrackObject) {
     self: `${baseUrl}/tracks/${trackId}`,
   }
 
-  console.log('trackObj', trackObj);
   return trackObj;
 }
 
@@ -46,7 +45,6 @@ router.get(
   async function (req, res) {
 
     const id = req.params.id;
-    console.log('preguntando por el id:', id);
     const album = await req.models.talbum.findOne({
       attributes: ['id', ['tartist_id', 'artist_id'], 'name', 'genre', 'artist', 'tracks', 'self'],
       where: {
@@ -85,7 +83,6 @@ router.get(
       res.status(404);
       res.send('Album no encontrado')
     }
-    // console.log('albums', albums.talbums);
   }
 )
 
@@ -94,7 +91,7 @@ router.post(
   '/:id/tracks',
   schemaValidator(albumSchemas.createTrack),
   async function (req, res) {
-    // res.send('pasamos el validador');
+
     const baseUrl = req.protocol + '://' + req.get('host');
     const id = req.params.id;
 
@@ -102,7 +99,7 @@ router.post(
 
     // Si encuentras el album
     if (foundAlbum) {
-      // res.send('Album encontrado');
+
       const artistUrl = foundAlbum.artist;
       const trackObj = createTrackObject(baseUrl, artistUrl, id, req.body);
 
