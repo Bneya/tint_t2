@@ -172,7 +172,7 @@ router.put(
     if (album) {
       // Si encuentra el album, reproduce sus canciones
       await req.models.ttrack.update(
-        { times_played: req.models.sequelize.literal ('times_played + 1') },
+        { times_played: req.models.sequelize.literal('times_played + 1') },
         { where: { talbum_id: id } }
       );
 

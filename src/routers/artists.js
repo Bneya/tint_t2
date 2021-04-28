@@ -243,6 +243,43 @@ router.delete(
   }
 )
 
+// PUT /artists/:id/albums/play
+router.put(
+  '/:id/albums/play',
+  async function (req, res) {
+
+    const id = req.params.id;
+    const artist = await req.models.tartist.findOne({ where: { id } });
+
+    if (artist) {
+
+      // Obtén todos los id de albums de un artista
+      const artistAlbums = await req.models.talbum.findAll({
+        attributes: ['id'],
+        where: { tartist_id: id },
+        raw: true,
+      })
+      const albumIds = artistAlbums.map(alb => alb.id);
+      console.log('artistAlbums', artistAlbums);
+      console.log('albumIds', albumIds);
+
+      // Incrementa en +1 todos los tracks que tengan talbum_id alguno de los anteriores
+      await req.models.ttrack.update(
+        { times_played: req.models.sequelize.literal('times_played + 1') },
+        { where: { talbum_id: albumIds } }
+      )
+
+      res.status(200);
+      res.send('Todas las canciones del artista fueron reproducidas');
+
+    } else {
+      // Artista no encontrado
+      res.status(404);
+      res.send('Artista no encontrado');
+    }
+  }
+)
+
 // router.post(
 //   '/',
 //   schemaValidator(artistSchemas.createArtist),
