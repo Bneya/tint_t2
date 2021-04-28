@@ -149,15 +149,41 @@ router.delete(
      const album = await req.models.talbum.findOne({ where: { id } });
 
      if (album) {
-       // Si encuentra el artista, elimínalo
+       // Si encuentra el album, elimínalo
        await album.destroy();
        res.status(204);
        res.send('Album eliminado');
      } else {
-       // Artista no encontrado
+       // Album no encontrado
        res.status(404)
        res.send('Album no encontrado');
      }
+  }
+)
+
+// PUT /albums/:id/tracks/play. Reproduce todas las canciones de un album
+router.put(
+  '/:id/tracks/play',
+  async function (req, res) {
+
+    const id = req.params.id;
+    const album = await req.models.talbum.findOne({ where: { id } });
+
+    if (album) {
+      // Si encuentra el album, reproduce sus canciones
+      await req.models.ttrack.update(
+        { times_played: req.models.sequelize.literal ('times_played + 1') },
+        { where: { talbum_id: id } }
+      );
+
+      res.status(200);
+      res.send('Canciones del album reproducidas')
+
+    } else {
+      // Album no encontrado
+      res.status(404);
+      res.send('Album no encontrado')
+    }
   }
 )
 
